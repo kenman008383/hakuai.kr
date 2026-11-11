@@ -1,0 +1,153 @@
+---
+import Base from "../../../layouts/Base.astro";
+import VideoCard from "../../../components/VideoCard.astro";
+import { LEVELS, trackOf, levelName } from "../../../data/site.js";
+import { EPISODES, epsOf, epUrl, ytUrl, mmss, fmtDate, fileUrl, fileName, nextOf, prevOf, thumbOf } from "../../../data/episodes.js";
+
+export function getStaticPaths() {
+  return EPISODES.filter((e) => e.track === "chatgpt").map((e) => ({ params: { level: e.level, no: e.no }, props: { e } }));
+}
+const { e } = Astro.props;
+const t = trackOf(e.track);
+const lvName = levelName(e.level);
+const pub = epsOf(e.track).length;
+const next = nextOf(e);
+const prev = prevOf(e);
+const slug = `${e.track}-${e.level}-${e.no}`;
+const files = [
+  { ext: "pptx", name: "강의 슬라이드 (PowerPoint)", note: "수업이나 발표에 바로 쓸 수 있어요" },
+  { ext: "pdf", name: "강의 슬라이드 (PDF)", note: "휴대폰에서 보기 좋아요" },
+];
+const ytIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>';
+const dlIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>';
+---
+<Base title={`${t.name} ${lvName} ${e.no} · ${e.title}`} description={e.oneLine} nav="course" image={thumbOf(e)}>
+  <main>
+    <div class="wrap gut lesson" data-lesson={slug}>
+      <aside class="l-nav">
+        <details class="toc" id="toc" open>
+          <summary>{t.name} 강의 목차 <small>공개 {pub}편</small></summary>
+          <div class="progress">영상이 나오는 대로 순서대로 공개해요.</div>
+          {LEVELS.map((l) => {
+            const eps = epsOf(e.track, l.id);
+            if (l.id !== e.level) return (
+              <div class="grp"><b>{l.name} <span class="chip wait">{eps.length ? `${eps.length}편` : "공개 전"}</span></b>
+                {eps.map((x) => <a href={epUrl(x)}><span class="no">{x.no}</span><span>{x.title}</span></a>)}
+              </div>
+            );
+            const lastEp = eps.at(-1);
+            return (
+              <div class="grp"><b>{l.name} <span class="chip">{eps.length}편 공개</span></b>
+                {eps.map((x) => <a href={epUrl(x)} aria-current={x.no === e.no ? "page" : undefined}><span class="no">{x.no}</span><span>{x.no === "00" ? `${x.tag} · ` : ""}{x.title}</span></a>)}
+                {lastEp?.next && <span class="item"><span class="no">{lastEp.next.no}</span><span>{lastEp.next.title} <span class="chip wait">예정</span></span></span>}
+              </div>
+            );
+          })}
+        </details>
+      </aside>
+
+      <div class="l-video">
+        <VideoCard ep={e} eager />
+        <div class="vbtns">
+          <a class="btn btn-accent" href={ytUrl(e)} target="_blank" rel="noopener"><Fragment set:html={ytIcon} />유튜브에서 보기</a>
+          <a class="btn btn-line" href="#lesson-files"><Fragment set:html={dlIcon} />자료 받기</a>
+        </div>
+      </div>
+
+      <article class="l-main">
+        <div class="l-head">
+          <div class="crumb"><a href="/">홈</a>›<a href={`/${e.track}/${e.level}/`}>{t.name} {lvName}</a>›<span>{e.no}</span></div>
+          <span class="kicker">{t.name} {lvName} {e.no} · {e.tag}</span>
+          <h1>{e.title}</h1>
+          <div class="meta"><span>영상 {e.duration}</span><span>{fmtDate(e.date)} 공개</span><span>하쿠</span></div>
+        </div>
+
+        <div><h2>한눈에 보기</h2><p class="summary">{e.summary}</p></div>
+
+        <div>
+          <h2>영상 구간별 내용</h2>
+          <p class="hint">시간을 누르면 유튜브의 그 장면부터 볼 수 있어요.</p>
+          <ol class="timeline">
+            {e.timeline.map(([s, h, d]) => (
+              <li><a class="ts" href={ytUrl(e, s)} target="_blank" rel="noopener">{mmss(s)}</a><strong>{h}</strong><p>{d}</p></li>
+            ))}
+          </ol>
+        </div>
+
+        {e.prompts?.length > 0 && (
+          <div>
+            <h2>이렇게 물어보세요</h2>
+            <p class="hint">복사해서 챗GPT에 붙여 넣고, 내 상황에 맞게 바꿔 보세요.</p>
+            <div class="prompts">
+              {e.prompts.map((p, n) => (
+                <div class="prompt">
+                  <div class="ph"><b>{p.label}</b><button class="copy" type="button" data-copy={`prompt-${n}`}>문장 복사</button></div>
+                  <blockquote id={`prompt-${n}`}>{p.text}</blockquote>
+                  <p class="after">{p.after}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {e.cautions?.length > 0 && (
+          <div>
+            <h2>꼭 확인할 것</h2>
+            <div class="cautions">
+              {e.cautions.map(([a, b]) => <div class="caution"><div><strong>{a}</strong><p>{b}</p></div></div>)}
+            </div>
+          </div>
+        )}
+
+        {e.practice?.length > 0 && (
+          <div>
+            <h2>오늘의 연습</h2>
+            <p class="hint">해 본 것에 표시해 두세요. 이 기기에만 저장돼요.</p>
+            <ul class="practice">
+              {e.practice.map((p, n) => (
+                <li><label for={`pr-${n}`}><input type="checkbox" id={`pr-${n}`} data-check={n}><span>{p}</span></label></li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {next ? (
+          <a class="nextbox" href={epUrl(next)}>
+            <span class="kicker">다음 강의 · {lvName} {next.no}</span>
+            <h3>{next.title}</h3>
+            <p>{next.oneLine}</p>
+          </a>
+        ) : e.next && (
+          <div class="nextbox">
+            <span class="kicker">다음 편 예고 · {lvName} {e.next.no}</span>
+            <h3>{e.next.title}</h3>
+            <p>서두르지 말고, 하쿠와 함께 차근차근 시작해요.</p>
+          </div>
+        )}
+
+        <div class="ask">
+          <div><b>이 강의에서 궁금한 점이 있나요?</b><p>질문을 남기면 확인 후 Q&amp;A에 답변이 올라와요.</p></div>
+          <a class="btn btn-accent" href="/qna/">질문하기</a>
+        </div>
+
+        <div class="pager">
+          {prev ? <a class="btn btn-line" href={epUrl(prev)}>← 이전 강의</a> : <a class="btn btn-line" href={`/${e.track}/${e.level}/`}>← {lvName} 강의 목록</a>}
+          {next ? <a class="btn btn-line" href={epUrl(next)}>다음 강의 →</a> : <a class="btn btn-line" href="/resources/">자료실 →</a>}
+        </div>
+      </article>
+
+      <aside class="l-files" id="lesson-files">
+        <div class="panel">
+          <h3>강의 자료 내려받기</h3>
+          <p>수업이나 가족에게 알려 줄 때 자유롭게 쓰세요.</p>
+          {files.map((f) => (
+            <a class="file" href={fileUrl(e, f.ext)} download={fileName(e, f.ext, lvName)}>
+              <span class={`ext ${f.ext}`}>{f.ext.toUpperCase()}</span>
+              <span><b>{f.name}</b><small>{f.note}</small></span>
+            </a>
+          ))}
+        </div>
+      </aside>
+    </div>
+  </main>
+</Base>

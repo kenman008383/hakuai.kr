@@ -1,0 +1,73 @@
+---
+import Base from "../layouts/Base.astro";
+import LevelCard from "./LevelCard.astro";
+import { LEVELS, trackOf } from "../data/site.js";
+import { epsOf, epUrl, thumbOf, fmtDate } from "../data/episodes.js";
+
+const { track, level } = Astro.props;
+const t = trackOf(track);
+const lv = LEVELS.find((l) => l.id === level);
+const info = t.levels[level];
+const eps = epsOf(track, level);
+const prologue = eps.find((e) => e.no === "00");
+const rest = eps.filter((e) => e.no !== "00");
+const last = eps.at(-1);
+---
+<Base title={`${t.name} ${lv.name}`} description={`${t.name} ${lv.name}: ${info.goal}. ${info.topics}.`} nav="course">
+  <div class="band accent">
+    <div class="wrap gut page-hero">
+      <div class="crumb"><a href="/">홈</a><span>›</span><span>과정</span></div>
+      <h1>{t.name} 과정</h1>
+      <p class="lead">{t.desc}. {lv.name}에서는 {info.topics}를 다뤄요.</p>
+    </div>
+  </div>
+  <main>
+    <section>
+      <div class="wrap gut" style="display:grid;gap:28px">
+        <div class="level-tabs">
+          {LEVELS.map((l) => <LevelCard track={track} level={l} current={l.id === level} />)}
+        </div>
+        <div>
+          <div class="sec-head">
+            <h2>{lv.name} 강의 목록</h2>
+            {eps.length > 0 && <p>공개 {eps.length}편 · 영상이 나오는 대로 추가돼요</p>}
+          </div>
+          <div class="eps">
+            {prologue && (
+              <a class="ep feature" href={epUrl(prologue)}>
+                <img src={thumbOf(prologue)} alt="" width="1280" height="720" loading="lazy">
+                <div style="display:grid;gap:6px">
+                  <span class="num">{lv.name} {prologue.no} · {prologue.tag}</span>
+                  <h3>{prologue.title}</h3>
+                  <p>{prologue.oneLine}</p>
+                  <p style="font-size:14px">{prologue.duration} · {fmtDate(prologue.date)} · 슬라이드 PPTX·PDF</p>
+                </div>
+              </a>
+            )}
+            {rest.map((e) => (
+              <a class="ep" href={epUrl(e)}>
+                <img src={thumbOf(e)} alt="" width="1280" height="720" loading="lazy">
+                <span class="num">{lv.name} {e.no}</span>
+                <h3>{e.title}</h3>
+                <p>{e.duration} · {fmtDate(e.date)}</p>
+              </a>
+            ))}
+            {last?.next && (
+              <div class="ep pending next">
+                <span class="num">{lv.name} {last.next.no} · 다음 편</span>
+                <h3>{last.next.title}</h3>
+                <p>영상이 나오면 이곳에 공개돼요</p>
+              </div>
+            )}
+            {eps.length === 0 && (
+              <div class="ep pending empty">
+                <h3>{lv.name} 과정은 {level === "intro" ? "곧" : "입문 과정 이후 차례로"} 공개돼요</h3>
+                <p>영상이 만들어지는 대로 상세 설명과 강의 슬라이드가 함께 올라와요.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>

@@ -1,0 +1,9 @@
+---
+import { thumbOf, ytUrl } from "../data/episodes.js";
+const { ep, eager = false } = Astro.props;
+---
+<a class="video" href={ytUrl(ep)} target="_blank" rel="noopener" aria-label={`유튜브에서 ${ep.title} 보기`}>
+  <img src={thumbOf(ep)} alt={`${ep.ytTitle ?? ep.title} 썸네일`} width="1280" height="720" loading={eager ? "eager" : "lazy"}
+    onerror={`this.onerror=null;this.src='https://i.ytimg.com/vi/${ep.video}/hqdefault.jpg'`}>
+  <span class="play"><i></i>유튜브에서 보기</span><span class="dur">{ep.duration}</span>
+</a>

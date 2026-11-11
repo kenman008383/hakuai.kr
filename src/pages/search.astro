@@ -1,0 +1,29 @@
+---
+import Base from "../layouts/Base.astro";
+import { levelName, trackOf } from "../data/site.js";
+import { EPISODES, epUrl } from "../data/episodes.js";
+const index = EPISODES.map((e) => ({
+  url: epUrl(e),
+  label: `${trackOf(e.track).name} ${levelName(e.level)} ${e.no}`,
+  title: e.title,
+  text: [e.title, e.tag, e.oneLine, e.summary, ...e.timeline.map((t) => `${t[1]} ${t[2]}`), ...(e.prompts ?? []).map((p) => p.label)].join(" "),
+}));
+---
+<Base title="강의 검색">
+  <div class="band">
+    <div class="wrap gut page-hero search-page">
+      <div class="crumb"><a href="/">홈</a><span>›</span><span>강의 검색</span></div>
+      <h1>강의 검색</h1>
+      <form action="/search/" role="search" style="margin-top:12px"><label class="skip" for="search-input">검색어</label><input id="search-input" name="q" type="search" placeholder="예: 공지, 메모 정리, 클라우드"></form>
+    </div>
+  </div>
+  <main>
+    <section>
+      <div class="wrap gut">
+        <p id="search-status" class="hint" style="margin:0 0 14px"></p>
+        <div class="list search-results" id="search-results"></div>
+      </div>
+    </section>
+  </main>
+  <script type="application/json" id="search-index" set:html={JSON.stringify(index)}></script>
+</Base>

@@ -1,0 +1,14 @@
+---
+import { trackOf } from "../data/site.js";
+import { epsOf } from "../data/episodes.js";
+const { track, level, current, showTopics = false } = Astro.props;
+const t = trackOf(track);
+const info = t.levels[level.id];
+const n = epsOf(track, level.id).length;
+---
+<a class="level-tab" href={`/${track}/${level.id}/`} aria-current={current ? "page" : undefined}>
+  <b>{level.name}</b>
+  <span>{info.goal}</span>
+  {showTopics && <small class="topics">{info.topics}</small>}
+  {n ? <span class="chip">{n}편 공개</span> : <span class="chip wait">{level.id === "intro" ? "곧 공개" : "입문 이후 공개"}</span>}
+</a>

@@ -1,0 +1,31 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE } from "../data/site.js";
+---
+<Base title="소개" nav="about">
+  <div class="band">
+    <div class="wrap gut page-hero">
+      <div class="crumb"><a href="/">홈</a><span>›</span><span>소개</span></div>
+      <h1>{SITE.name}</h1>
+      <p class="lead">AI가 낯선 분들이 내 생활과 일에서 작은 도움을 받아 보도록, 짧은 영상과 따라 하기 자료를 만듭니다.</p>
+    </div>
+  </div>
+  <main>
+    <section>
+      <div class="wrap gut two">
+        <div class="prose-block">
+          <h2>이렇게 배워요</h2>
+          <p>매 편 한 가지씩 직접 해 보고, 질문을 고치고, 답을 확인하는 연습을 해요. 영상은 유튜브에서 보고, 이 홈페이지에서 내용을 다시 읽고 강의 자료를 내려받을 수 있어요.</p>
+          <p>ChatGPT 과정을 입문 · 초급 · 중급 · 고급 단계로 준비하고 있어요. 영상이 나오는 대로 차례로 공개합니다.</p>
+          <a class="btn btn-accent" style="justify-self:start" href={SITE.channel} target="_blank" rel="noopener">유튜브 채널 가기</a>
+        </div>
+        <div class="principles">
+          <div><b>작은 일부터</b><span>공지 쓰기, 메모 정리처럼 익숙한 일에서 시작해요.</span></div>
+          <div><b>확인은 내가</b><span>AI의 답은 틀릴 수 있어요. 중요한 정보는 원래 자료와 대조해요.</span></div>
+          <div><b>개인정보는 빼고</b><span>연습할 때는 이름이나 연락처 없이 해요.</span></div>
+          <div><b>자료는 자유롭게</b><span>슬라이드는 수업이나 가족 교육에 자유롭게 쓰셔도 돼요.</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>

@@ -1,0 +1,97 @@
+---
+import "../styles/global.css";
+import { SITE, LEVELS, TRACKS } from "../data/site.js";
+import { epsOf } from "../data/episodes.js";
+
+const { title, description = SITE.description, nav = "", image } = Astro.props;
+const fullTitle = title ? `${title} | ${SITE.name}` : SITE.name;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const ogImage = image ?? `${SITE.url}/og.png`;
+const gpt = TRACKS[0];
+const countOf = (lv) => epsOf(gpt.id, lv).length;
+---
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{fullTitle}</title>
+  <meta name="description" content={description}>
+  <link rel="canonical" href={canonical}>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content={SITE.name}>
+  <meta property="og:title" content={fullTitle}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={canonical}>
+  <meta property="og:image" content={ogImage}>
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700;800;900&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+</head>
+<body>
+  <a class="skip" href="#main">본문으로 바로가기</a>
+  <header class="top">
+    <div class="wrap gut">
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">AI</span>{SITE.name}</a>
+      <nav class="mainnav" aria-label="주요 메뉴">
+        <div class="dd">
+          <button type="button" id="dd-btn" aria-expanded="false" aria-controls="mega" aria-current={nav === "course" ? "page" : undefined}>과정</button>
+          <div class="mega" id="mega" hidden>
+            {LEVELS.map((l) => (
+              <a href={`/${gpt.id}/${l.id}/`}>
+                <b>{gpt.name} {l.name}</b>
+                <span>{gpt.levels[l.id].goal}</span>
+                <span>{countOf(l.id) ? `${countOf(l.id)}편 공개` : "공개 전"}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+        <a href="/qna/" aria-current={nav === "qna" ? "page" : undefined}>Q&amp;A</a>
+        <a href="/resources/" aria-current={nav === "resources" ? "page" : undefined}>자료실</a>
+        <a href="/about/" aria-current={nav === "about" ? "page" : undefined}>소개</a>
+      </nav>
+      <div class="top-right">
+        <form class="search" action="/search/" role="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+          <input id="q-search" name="q" type="search" placeholder="강의 검색" aria-label="강의 검색">
+        </form>
+        <a class="yt-link" href={SITE.channel} target="_blank" rel="noopener">유튜브</a>
+      </div>
+      <button class="menu-btn" type="button" id="menu-btn" aria-expanded="false" aria-controls="sheet">메뉴</button>
+    </div>
+    <nav class="sheet gut" id="sheet" hidden aria-label="전체 메뉴">
+      {LEVELS.map((l) => (
+        <a href={`/${gpt.id}/${l.id}/`}>{gpt.name} {l.name}<small>{countOf(l.id) ? `${countOf(l.id)}편 공개` : "공개 전"}</small></a>
+      ))}
+      <a href="/qna/">Q&amp;A</a>
+      <a href="/resources/">자료실</a>
+      <a href="/about/">소개</a>
+      <a href="/search/">강의 검색</a>
+      <a href={SITE.channel} target="_blank" rel="noopener">유튜브 채널</a>
+    </nav>
+  </header>
+
+  <div id="main"><slot /></div>
+
+  <footer>
+    <div class="wrap gut">
+      <span>{SITE.name} · 서두르지 말고 차근차근</span>
+      <span>영상은 <a href={SITE.channel} target="_blank" rel="noopener">유튜브</a>에서, 강의 자료는 이곳에서 자유롭게 받아 가세요.</span>
+    </div>
+  </footer>
+
+  <div class="tabbar">
+    <nav aria-label="하단 메뉴">
+      <a href="/" aria-current={nav === "home" ? "page" : undefined}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>홈</a>
+      <a href={`/${gpt.id}/intro/`} aria-current={nav === "course" ? "page" : undefined}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7v14H4zM13 5h7v14h-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>과정</a>
+      <a href="/qna/" aria-current={nav === "qna" ? "page" : undefined}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Q&amp;A</a>
+      <a href="/resources/" aria-current={nav === "resources" ? "page" : undefined}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>자료실</a>
+      <a href="/about/" aria-current={nav === "about" ? "page" : undefined}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>소개</a>
+    </nav>
+  </div>
+
+  <script is:inline src="/js/site.js" defer></script>
+</body>
+</html>

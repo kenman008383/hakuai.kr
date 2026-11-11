@@ -1,0 +1,73 @@
+---
+import Base from "../layouts/Base.astro";
+import VideoCard from "../components/VideoCard.astro";
+import LevelCard from "../components/LevelCard.astro";
+import { LEVELS, levelName, trackOf } from "../data/site.js";
+import { EPISODES, latestEpisode, epUrl, fmtDate } from "../data/episodes.js";
+import { QNA } from "../data/qna.js";
+
+const latest = latestEpisode();
+const first = EPISODES[0];
+const recentEps = [...EPISODES].sort((a, b) => b.date.localeCompare(a.date) || b.no.localeCompare(a.no)).slice(0, 4);
+const recentQna = QNA.slice(0, 3);
+---
+<Base nav="home">
+  <div class="band">
+    <div class="wrap gut hero">
+      <div>
+        <span class="eyebrow">하쿠와 함께 AI</span>
+        <h1>AI, <em>서두르지 말고</em><br>차근차근 시작해요</h1>
+        <p class="lead">ChatGPT를 처음 쓰는 분을 위한 강의예요. 짧은 영상으로 보고, 이곳에서 다시 읽고, 강의 자료를 내려받아 따라 해 보세요.</p>
+        <div class="actions">
+          <a class="btn btn-yellow" href={epUrl(first)} id="start-btn" data-default-label="첫 강의 시작하기">첫 강의 시작하기</a>
+          <a class="btn btn-ghost" href="/chatgpt/">과정 둘러보기</a>
+        </div>
+      </div>
+      <div>
+        <VideoCard ep={latest} eager />
+        <p class="hero-meta">최신 강의 · {trackOf(latest.track).name} {levelName(latest.level)} {latest.no} {latest.tag} · {fmtDate(latest.date)}</p>
+      </div>
+    </div>
+  </div>
+  <main>
+    <section>
+      <div class="wrap gut">
+        <div class="sec-head">
+          <div><div class="kicker">ChatGPT 과정</div><h2>입문부터 고급까지, 차근차근</h2></div>
+          <p>영상이 나오는 대로 순서대로 공개해요.</p>
+        </div>
+        <div class="level-tabs">
+          {LEVELS.map((l) => <LevelCard track="chatgpt" level={l} showTopics />)}
+        </div>
+      </div>
+    </section>
+    <section style="padding-top:0">
+      <div class="wrap gut two">
+        <div>
+          <div class="sec-head"><h2>새 강의</h2><a href="/resources/">자료실</a></div>
+          <div class="list">
+            {recentEps.map((e) => (
+              <a href={epUrl(e)}>
+                <span class="meta"><span class="chip">{trackOf(e.track).name} {levelName(e.level)} {e.no}</span><span class="ftag">PPTX</span><span class="ftag">PDF</span><span>{fmtDate(e.date)}</span></span>
+                <b>{e.title}</b>
+              </a>
+            ))}
+          </div>
+        </div>
+        <div>
+          <div class="sec-head"><h2>최근 Q&amp;A</h2><a href="/qna/">전체 보기</a></div>
+          <div class="list">
+            {recentQna.length ? recentQna.map((q) => (
+              <a href={`/qna/#q-${q.id}`}>
+                <span class="meta"><span class="chip">{q.ep}</span>{q.status === "done" ? <span class="chip ok">답변 완료</span> : <span class="chip pend">답변 준비 중</span>}</span>
+                <b>{q.q}</b>
+              </a>
+            )) : (
+              <div class="row"><b>아직 올라온 질문이 없어요</b><span class="meta">강의를 보다 궁금한 점이 생기면 첫 질문을 남겨 주세요.</span></div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>

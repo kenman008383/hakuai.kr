@@ -1,0 +1,10 @@
+---
+import LevelPage from "../../../components/LevelPage.astro";
+import { LEVELS } from "../../../data/site.js";
+
+export function getStaticPaths() {
+  return LEVELS.map((l) => ({ params: { level: l.id } }));
+}
+const { level } = Astro.params;
+---
+<LevelPage track="chatgpt" level={level} />

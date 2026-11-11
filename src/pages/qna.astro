@@ -1,0 +1,59 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE, LEVELS } from "../data/site.js";
+import { QNA } from "../data/qna.js";
+import { fmtDate } from "../data/episodes.js";
+---
+<Base title="Q&A" description="강의를 보다가 막힌 점을 남겨 주세요. 하쿠가 확인한 답변이 이곳에 올라와요." nav="qna">
+  <div class="band">
+    <div class="wrap gut page-hero">
+      <div class="crumb"><a href="/">홈</a><span>›</span><span>Q&amp;A</span></div>
+      <h1>Q&amp;A</h1>
+      <p class="lead">강의를 보다가 막힌 점을 남겨 주세요. 하루 1~2번 확인해서 답변을 올려요.</p>
+    </div>
+  </div>
+  <main>
+    <section>
+      <div class="wrap gut" style="display:grid;gap:28px">
+        <div class="flow">
+          <div><b>① 질문 남기기</b>로그인 없이 작성</div>
+          <div><b>② 질문 모으기</b>하루 1~2번 확인</div>
+          <div><b>③ 답변 작성</b>AI 하쿠 도우미가 작성</div>
+          <div><b>④ 확인 후 공개</b>하쿠가 확인하고 게시</div>
+        </div>
+        <div class="qna-layout">
+          <div>
+            <div class="filters" role="group" aria-label="단계별 보기">
+              <button type="button" data-filter="all" aria-pressed="true">전체</button>
+              {LEVELS.map((l) => <button type="button" data-filter={l.id} aria-pressed="false">{l.name}</button>)}
+            </div>
+            {QNA.map((q) => (
+              <details class="q" id={`q-${q.id}`} data-level={q.level}>
+                <summary>
+                  <span class="meta"><span class="chip">{q.ep}</span>{q.status === "done" ? <span class="chip ok">답변 완료</span> : <span class="chip pend">답변 준비 중</span>}<span>{fmtDate(q.date)}</span>{q.nick && <span>{q.nick}</span>}</span>
+                  <b>{q.q}</b>
+                </summary>
+                <div class="ans">
+                  {q.status === "done"
+                    ? <><span class="by"><i>AI</i>AI 하쿠 도우미 답변 · 하쿠 확인</span><p>{q.a}</p></>
+                    : <p style="color:var(--muted)">질문을 확인했어요. 다음 답변 시간에 올라올 예정이에요.</p>}
+                </div>
+              </details>
+            ))}
+            <div class="panel" id="qna-empty" hidden={QNA.length > 0}>
+              <p style="font-size:16px">아직 올라온 질문이 없어요. 오른쪽에서 첫 질문을 남겨 보세요.</p>
+            </div>
+          </div>
+          <div class="askbox">
+            <h3>질문하기</h3>
+            <p>어떤 강의의 어느 부분이 궁금한지 편하게 적어 주세요. 로그인은 필요 없어요.</p>
+            <p class="note">이름, 전화번호, 주소 같은 개인정보는 적지 마세요. 질문과 답변은 이 페이지에 공개돼요.</p>
+            {SITE.qnaFormUrl
+              ? <a class="btn btn-accent" href={SITE.qnaFormUrl} target="_blank" rel="noopener">질문 남기기</a>
+              : <p class="note" style="background:var(--accent-soft);color:var(--ink)">질문 접수는 곧 열려요. 그동안은 유튜브 영상 댓글로 남겨 주세요.</p>}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>

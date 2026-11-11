@@ -1,0 +1,45 @@
+---
+import Base from "../layouts/Base.astro";
+import { LEVELS, levelName, trackOf } from "../data/site.js";
+import { EPISODES, epUrl, fmtDate, fileUrl, fileName } from "../data/episodes.js";
+const rows = [...EPISODES].sort((a, b) => b.date.localeCompare(a.date) || b.no.localeCompare(a.no));
+---
+<Base title="자료실" description="하쿠의 AI 첫걸음 강의 슬라이드(PPTX·PDF)를 자유롭게 내려받으세요." nav="resources">
+  <div class="band">
+    <div class="wrap gut page-hero">
+      <div class="crumb"><a href="/">홈</a><span>›</span><span>자료실</span></div>
+      <h1>자료실</h1>
+      <p class="lead">강의마다 상세 설명과 슬라이드를 올려요. 수업이나 가족에게 알려 줄 때 자유롭게 쓰세요.</p>
+    </div>
+  </div>
+  <main>
+    <section>
+      <div class="wrap gut">
+        <div class="filters" role="group" aria-label="단계별 보기">
+          <button type="button" data-filter="all" aria-pressed="true">전체</button>
+          {LEVELS.map((l) => <button type="button" data-filter={l.id} aria-pressed="false">{l.name}</button>)}
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th style="width:70px">번호</th><th style="width:140px">과정</th><th>제목</th><th style="width:150px">자료</th><th style="width:120px">날짜</th></tr></thead>
+            <tbody>
+              {rows.map((e, i) => (
+                <tr data-level={e.level}>
+                  <td class="n">{rows.length - i}</td>
+                  <td><span class="chip">{trackOf(e.track).name} {levelName(e.level)}</span></td>
+                  <td><a href={epUrl(e)}>{levelName(e.level)} {e.no} · {e.title}</a></td>
+                  <td>
+                    <a class="ftag" href={fileUrl(e, "pptx")} download={fileName(e, "pptx", levelName(e.level))}>PPTX</a>
+                    <a class="ftag" href={fileUrl(e, "pdf")} download={fileName(e, "pdf", levelName(e.level))}>PDF</a>
+                  </td>
+                  <td class="n">{fmtDate(e.date)}</td>
+                </tr>
+              ))}
+              <tr id="res-empty" hidden><td colspan="5" style="color:var(--muted)">이 단계의 자료는 아직 없어요. 강의가 공개되면 여기에 올라와요.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
