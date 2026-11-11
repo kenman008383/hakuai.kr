@@ -29,7 +29,7 @@
 
 ## 자주 하는 일
 - 새 강의 올리기: `.claude/skills/new-episode/SKILL.md` 절차를 따른다 ("강의 올려 줘" + 유튜브 주소).
-- Q&A 답변: 승인된 답변만 `src/content/qna/`에 추가한다. 답변 표시는 "AI 하쿠 도우미 답변 · 하쿠 확인". 개인정보는 지우고, 계정 해킹·결제·의료·법률 상담은 공식 창구로 안내한다.
+- Q&A 답변: `.claude/skills/answer-qna/SKILL.md` 절차를 따른다. 승인된 답변만 `src/content/qna/`에 추가한다. 답변 표시는 "AI 하쿠 도우미 답변 · 하쿠 확인". 개인정보는 지우고, 계정 해킹·결제·의료·법률 상담은 공식 창구로 안내한다.
 
 ## 작업 환경
 - Node 22, `npm ci && npm run build` (Astro 7.4.2 고정).
