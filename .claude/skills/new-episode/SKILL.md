@@ -45,6 +45,7 @@ python3 tools/fetch_video.py <주소> [<주소> ...]
 ```bash
 python3 tools/make_slides.py src/content/episodes/<과정>/<단계>/<번호>.json
 ```
+- **디자인은 챕터 안에서 고정이다.** 슬라이드 모양을 맞추려고 `tools/make_slides.py`의 색·글꼴·배치를 고치지 않는다. 넘치는 글자는 JSON 문장을 줄여서 해결한다. 디자인 변경은 하쿠가 지시할 때만(CLAUDE.md 규칙).
 - PDF를 PNG로 몇 장 렌더링해서(`pdftoppm -r 40`) 글자가 상자를 넘거나 겹치는지 본다. 넘치면 JSON 문장을 줄인다.
 
 ## 5. 빌드하고 올리기

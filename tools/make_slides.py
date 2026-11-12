@@ -14,7 +14,14 @@ slides 항목 형식:
     {"type": "bullets", "kicker", "title", "bullets": [...], "card": [제목, 내용]?}
     {"type": "prompt", "promptIndex": n, "kicker", "title", "intro"}   # prompts[n]의 질문과 확인할 점을 씀
     {"type": "statement", "kicker", "lines": [...], "body"}
-문장 안의 **굵게** 표시는 청록색 굵은 글씨가 된다.
+문장 안의 **굵게** 표시는 강조색 굵은 글씨가 된다.
+
+디자인 규칙 (챕터 = 과정 안의 단계: 입문·초급·중급·고급)
+- 한 챕터 안의 모든 강의는 같은 슬라이드 디자인을 쓴다. 챕터별 디자인 이름은 src/data/tracks.json의 slideDesign.
+- 하쿠의 별도 지시가 없으면 디자인(DESIGNS의 색, 글꼴, 아래 Deck의 배치·크기)을 바꾸지 않는다.
+  강의마다 달라지는 것은 내용(문장, slides 항목, 장 수)뿐이다.
+- 이미 쓰고 있는 디자인을 고쳐야 하면 기존 이름을 고치지 말고 새 이름(예: light-v2)을 DESIGNS에 추가하고,
+  지시받은 챕터의 slideDesign만 바꾼 뒤 그 챕터의 모든 강의 슬라이드를 다시 만들어 챕터 안을 통일한다.
 """
 import json
 import re
@@ -34,14 +41,34 @@ from pptx.util import Emu, Pt
 ROOT = Path(__file__).resolve().parent.parent
 DATA = json.loads((ROOT / "src/data/tracks.json").read_text(encoding="utf-8"))
 
-TEAL = RGBColor(0x14, 0x6B, 0x63)
-TEAL_SOFT = RGBColor(0xDC, 0xEE, 0xEA)
-MIST = RGBColor(0xE9, 0xF4, 0xF1)
-YELLOW = RGBColor(0xF5, 0xC5, 0x42)
-CREAM = RGBColor(0xFB, 0xF7, 0xEE)
-INK = RGBColor(0x1C, 0x29, 0x2E)
-MUTED = RGBColor(0x5B, 0x6B, 0x70)
-WHITE = RGBColor(0xFF, 0xFF, 0xFF)
+# 등록된 디자인. 한 번 강의에 쓰인 디자인은 수정하지 않는다 (위 디자인 규칙).
+DESIGNS = {
+    # ChatGPT 입문 00 프롤로그에서 확정한 밝은 디자인 (2026-11-11)
+    "light-v1": {
+        "TEAL": "146B63", "TEAL_SOFT": "DCEEEA", "MIST": "E9F4F1", "YELLOW": "F5C542",
+        "CREAM": "FBF7EE", "INK": "1C292E", "MUTED": "5B6B70", "WHITE": "FFFFFF",
+        "font_pptx": "맑은 고딕", "font_pdf": "NanumGothic",
+    },
+}
+
+
+def apply_design(name):
+    """챕터 디자인의 색을 모듈 전역에 적용한다."""
+    if name not in DESIGNS:
+        raise SystemExit(f"등록되지 않은 슬라이드 디자인이에요: {name} (tools/make_slides.py DESIGNS)")
+    g = globals()
+    for k, v in DESIGNS[name].items():
+        if not k.startswith("font_"):
+            g[k] = RGBColor.from_string(v)
+    return DESIGNS[name]
+
+
+def design_of(ep):
+    track = next(t for t in DATA["tracks"] if t["id"] == ep["track"])
+    return track.get("slideDesign", {}).get(ep["level"], "light-v1")
+
+
+apply_design("light-v1")
 IN = 914400
 
 
@@ -250,6 +277,7 @@ class Deck:
         ], spacing=1.5)
 
     def build(self, thumb):
+        self.prs.core_properties.keywords = f"slideDesign={design_of(self.ep)}"
         self.cover(thumb)
         self.goals()
         for sp in self.ep.get("slides", []):
@@ -281,12 +309,14 @@ def main(path):
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         thumb = fetch_thumb(ep["video"], tmp / "thumb.jpg")
+        design = apply_design(design_of(ep))
+        print(f"  · 슬라이드 디자인: {design_of(ep)} ({ep['track']} {ep['level']} 챕터)")
         pptx = out_dir / f"{base}.pptx"
-        deck = Deck(ep, "맑은 고딕").build(thumb)
+        deck = Deck(ep, design["font_pptx"]).build(thumb)
         deck.save(pptx)
         # PDF: 나눔고딕으로 만든 사본을 변환해 글꼴이 PDF에 들어가게 한다
         pdf_src = tmp / f"{base}.pptx"
-        Deck(ep, "NanumGothic").build(thumb).save(pdf_src)
+        Deck(ep, design["font_pdf"]).build(thumb).save(pdf_src)
         subprocess.run(["soffice", "--headless", "--convert-to", "pdf", "--outdir", str(tmp), str(pdf_src)],
                        check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         shutil.copy(tmp / f"{base}.pdf", out_dir / f"{base}.pdf")
