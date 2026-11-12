@@ -3,13 +3,15 @@ import Base from "../layouts/Base.astro";
 import VideoCard from "../components/VideoCard.astro";
 import LevelCard from "../components/LevelCard.astro";
 import { LEVELS, levelName, trackOf } from "../data/site.js";
-import { EPISODES, latestEpisode, epUrl, fmtDate } from "../data/episodes.js";
+import { EPISODES, latestEpisode, epUrl, fmtDate, epsOf, thumbOf, ytUrl } from "../data/episodes.js";
 import { QNA } from "../data/qna.js";
 
 const latest = latestEpisode();
 const first = EPISODES[0];
 const recentEps = [...EPISODES].sort((a, b) => b.date.localeCompare(a.date) || b.no.localeCompare(a.no)).slice(0, 4);
 const recentQna = QNA.slice(0, 3);
+const introEps = epsOf("chatgpt", "intro");
+const introNext = introEps.at(-1)?.next;
 ---
 <Base nav="home">
   <div class="band">
@@ -30,7 +32,38 @@ const recentQna = QNA.slice(0, 3);
     </div>
   </div>
   <main>
-    <section>
+    <section id="videos">
+      <div class="wrap gut">
+        <div class="sec-head">
+          <div><div class="kicker">ChatGPT 입문 · 공개 {introEps.length}편</div><h2>강의 영상, 순서대로 보세요</h2></div>
+          <p>썸네일을 누르면 유튜브 영상이, 제목을 누르면 강의 자료가 열려요.</p>
+        </div>
+        <div class="eps home-eps">
+          {introEps.map((e) => (
+            <div class="ep">
+              <a class="ep-thumb" href={ytUrl(e)} target="_blank" rel="noopener" aria-label={`유튜브에서 ${e.title} 보기`}>
+                <img src={thumbOf(e)} alt="" width="1280" height="720" loading="lazy"
+                  onerror={`this.onerror=null;this.src='https://i.ytimg.com/vi/${e.video}/hqdefault.jpg'`}>
+                <span class="mini-play"><i></i>영상 보기</span>{e.duration && <span class="dur">{e.duration}</span>}
+              </a>
+              <a class="ep-text" href={epUrl(e)}>
+                <span class="num">{levelName(e.level)} {e.no}</span>
+                <h3>{e.title}</h3>
+                <span class="more">강의 자료 · 따라 하기 ›</span>
+              </a>
+            </div>
+          ))}
+          {introNext && (
+            <div class="ep pending next">
+              <span class="num">{levelName("intro")} {introNext.no} · 다음 편</span>
+              <h3>{introNext.title}</h3>
+              <p>영상이 나오면 이곳에 공개돼요</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+    <section style="padding-top:0">
       <div class="wrap gut">
         <div class="sec-head">
           <div><div class="kicker">ChatGPT 과정</div><h2>입문부터 고급까지, 차근차근</h2></div>

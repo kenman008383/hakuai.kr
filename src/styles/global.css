@@ -154,6 +154,17 @@ a.ep:hover { border-color: var(--accent); }
 .ep.feature h3 { font-size: 22px; }
 .ep.feature p { font-size: 16px; }
 .ep.empty { grid-column: 1 / -1; padding: 28px; gap: 8px; }
+.home-eps .ep { padding: 10px 10px 14px; gap: 10px; }
+.ep-thumb { position: relative; display: block; border-radius: 8px; overflow: hidden; background: #0E222B; }
+.ep-thumb img { display: block; border-radius: 0; transition: transform .2s; }
+.ep-thumb:hover img { transform: scale(1.03); }
+.ep-thumb .dur { position: absolute; right: 8px; bottom: 8px; background: rgba(0,0,0,.78); color: #fff; font-size: 12px; font-weight: 700; padding: 1px 7px; border-radius: 6px; }
+.mini-play { position: absolute; left: 8px; bottom: 8px; display: inline-flex; align-items: center; gap: 6px; background: rgba(14,34,43,.9); color: #FBF7EE; font-weight: 700; font-size: 12px; padding: 4px 10px 4px 5px; border-radius: 999px; }
+.mini-play i { width: 18px; height: 18px; border-radius: 50%; background: #E62117; display: grid; place-items: center; }
+.mini-play i::after { content: ""; border-left: 7px solid #fff; border-top: 4.5px solid transparent; border-bottom: 4.5px solid transparent; margin-left: 2px; }
+.ep-text { display: grid; gap: 4px; padding: 0 6px; text-decoration: none; color: var(--ink); }
+.ep-text:hover h3 { color: var(--accent); }
+.ep-text .more { font-size: 14px; font-weight: 700; color: var(--accent); }
 .ep.empty h3 { font-size: 20px; color: var(--ink); }
 
 /* Lesson page: 3 columns */
