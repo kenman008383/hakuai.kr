@@ -82,8 +82,14 @@ const countOf = (lv) => epsOf(gpt.id, lv).length;
 
   <footer>
     <div class="wrap gut">
-      <span>{SITE.name} · 서두르지 말고 차근차근</span>
-      <span>영상은 <a href={SITE.channel} target="_blank" rel="noopener">유튜브</a>에서, 강의 자료는 이곳에서 자유롭게 받아 가세요.</span>
+      <div class="foot-info">
+        <span><b>{SITE.name}</b> · 운영: {SITE.operator}</span>
+        <span>문의: <a href={`mailto:${SITE.email}`}>{SITE.email}</a> · <a href={SITE.channel} target="_blank" rel="noopener">유튜브 채널</a></span>
+      </div>
+      <div class="foot-info">
+        <span>© {new Date().getFullYear()} {SITE.name}</span>
+        <span>강의 슬라이드는 개인·수업용으로 자유롭게 쓰실 수 있어요.</span>
+      </div>
     </div>
   </footer>
 

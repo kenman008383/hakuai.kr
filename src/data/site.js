@@ -4,6 +4,8 @@ export const SITE = {
   domain: "hakuai.kr",
   url: "https://hakuai.kr",
   channel: "https://www.youtube.com/@%ED%95%98%EC%BF%A0-b4r",
+  operator: "하쿠",
+  email: "kenman008383@gmail.com",
   description: "AI가 처음인 분을 위한 하쿠의 ChatGPT 강의. 짧은 영상으로 보고, 다시 읽고, 강의 자료를 내려받아 따라 해 보세요.",
   // Q&A 질문 접수용 Google 설문지 주소. 비어 있으면 "곧 열려요"로 표시된다.
   qnaFormUrl: "",
