@@ -6,7 +6,7 @@ const index = EPISODES.map((e) => ({
   url: epUrl(e),
   label: `${trackOf(e.track).name} ${levelName(e.level)} ${e.no}`,
   title: e.title,
-  text: [e.title, e.tag, e.oneLine, e.summary, ...e.timeline.map((t) => `${t[1]} ${t[2]}`), ...(e.prompts ?? []).map((p) => p.label)].join(" "),
+  text: [e.title, e.tag, e.oneLine, e.summary, ...(e.timeline ?? []).map((t) => `${t[1]} ${t[2]}`), ...(e.prompts ?? []).map((p) => p.label)].join(" "),
 }));
 ---
 <Base title="강의 검색">

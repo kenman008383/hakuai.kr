@@ -59,12 +59,12 @@ const dlIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" st
           <div class="crumb"><a href="/">홈</a>›<a href={`/${e.track}/${e.level}/`}>{t.name} {lvName}</a>›<span>{e.no}</span></div>
           <span class="kicker">{t.name} {lvName} {e.no} · {e.tag}</span>
           <h1>{e.title}</h1>
-          <div class="meta"><span>영상 {e.duration}</span><span>{fmtDate(e.date)} 공개</span><span>하쿠</span></div>
+          <div class="meta">{e.duration && <span>영상 {e.duration}</span>}<span>{fmtDate(e.date)} 공개</span><span>하쿠</span></div>
         </div>
 
         <div><h2>한눈에 보기</h2><p class="summary">{e.summary}</p></div>
 
-        <div>
+        {e.timeline?.length > 0 && <div>
           <h2>영상 구간별 내용</h2>
           <p class="hint">시간을 누르면 유튜브의 그 장면부터 볼 수 있어요.</p>
           <ol class="timeline">
@@ -72,7 +72,7 @@ const dlIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" st
               <li><a class="ts" href={ytUrl(e, s)} target="_blank" rel="noopener">{mmss(s)}</a><strong>{h}</strong><p>{d}</p></li>
             ))}
           </ol>
-        </div>
+        </div>}
 
         {e.prompts?.length > 0 && (
           <div>

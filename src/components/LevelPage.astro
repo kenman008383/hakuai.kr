@@ -40,7 +40,7 @@ const last = eps.at(-1);
                   <span class="num">{lv.name} {prologue.no} · {prologue.tag}</span>
                   <h3>{prologue.title}</h3>
                   <p>{prologue.oneLine}</p>
-                  <p style="font-size:14px">{prologue.duration} · {fmtDate(prologue.date)} · 슬라이드 PPTX·PDF</p>
+                  <p style="font-size:14px">{[prologue.duration, fmtDate(prologue.date), "슬라이드 PPTX·PDF"].filter(Boolean).join(" · ")}</p>
                 </div>
               </a>
             )}
@@ -49,7 +49,7 @@ const last = eps.at(-1);
                 <img src={thumbOf(e)} alt="" width="1280" height="720" loading="lazy">
                 <span class="num">{lv.name} {e.no}</span>
                 <h3>{e.title}</h3>
-                <p>{e.duration} · {fmtDate(e.date)}</p>
+                <p>{[e.duration, fmtDate(e.date)].filter(Boolean).join(" · ")}</p>
               </a>
             ))}
             {last?.next && (
