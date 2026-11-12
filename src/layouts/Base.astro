@@ -25,7 +25,12 @@ const countOf = (lv) => epsOf(gpt.id, lv).length;
   <meta property="og:url" content={canonical}>
   <meta property="og:image" content={ogImage}>
   <meta name="theme-color" content="#FFFFFF">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/icons/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/icons/favicon-16.png" type="image/png" sizes="16x16">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="apple-mobile-web-app-title" content="하쿠 AI">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700;800;900&family=Noto+Sans+KR:wght@400;500;700&display=swap">
@@ -34,7 +39,7 @@ const countOf = (lv) => epsOf(gpt.id, lv).length;
   <a class="skip" href="#main">본문으로 바로가기</a>
   <header class="top">
     <div class="wrap gut">
-      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">AI</span>{SITE.name}</a>
+      <a class="brand" href="/"><img class="brand-mark" src="/icons/logo-68.png" srcset="/icons/logo-68.png 2x, /icons/logo-136.png 4x" width="34" height="34" alt="" aria-hidden="true">{SITE.name}</a>
       <nav class="mainnav" aria-label="주요 메뉴">
         <div class="dd">
           <button type="button" id="dd-btn" aria-expanded="false" aria-controls="mega" aria-current={nav === "course" ? "page" : undefined}>과정</button>
