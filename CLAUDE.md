@@ -32,6 +32,11 @@
 - 새 강의 올리기: `.claude/skills/new-episode/SKILL.md` 절차를 따른다 ("강의 올려 줘" + 유튜브 주소).
 - Q&A 답변: `.claude/skills/answer-qna/SKILL.md` 절차를 따른다. 승인된 답변만 `src/content/qna/`에 추가한다. 답변 표시는 "AI 하쿠 도우미 답변 · 하쿠 확인". 개인정보는 지우고, 계정 해킹·결제·의료·법률 상담은 공식 창구로 안내한다.
 
+## 기록 남기기 (2026-11-18 하쿠 지시)
+- 작업이 끝날 때마다 `docs/작업기록.md` 맨 위에 날짜, 대화 내용(하쿠의 요청과 답), 한 일, 만든 파일, 남은 일을 적고 커밋·push한다.
+- 대화 중에 만든 파일(시안, 원고, 이미지, 슬라이드 등)은 저장소에 넣는다. 사이트에 공개할 것은 `public/`·`src/`에, 공개하지 않을 작업 자료는 `docs/자료/`에 둔다. 개인정보가 든 파일은 넣지 않는다.
+- 이 홈페이지는 AI 회사(`kenman008383/ai-company`)의 프로젝트 **p28**이다. 담당: 브랜드·콘텐츠부 홍주원(편집·출판) 주 담당, 허은호(디자인)·차승현(영상 제작) 협력. 결정·결과물·다음 할 일이 바뀌면 그 저장소의 `data/projects.json`(p28)과 `docs/인계/브랜드_콘텐츠부.md`, `docs/개발일지.md`도 고친다.
+
 ## 작업 환경
 - Node 22, `npm ci && npm run build` (Astro 7.4.2 고정).
 - 슬라이드: `pip install python-pptx yt-dlp`, LibreOffice(`soffice`), `fonts-nanum`.
