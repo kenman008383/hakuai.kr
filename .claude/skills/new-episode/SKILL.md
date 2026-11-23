@@ -15,7 +15,7 @@ python3 tools/fetch_video.py <주소> [<주소> ...]
 - 자막이 아직 없으면(업로드 직후) 하쿠에게 알리고, 대본이 있으면 받는다. 둘 다 없으면 제목·설명만으로 쓰지 말고, 몇 시간 뒤 다시 시도하겠다고 말한다.
 - 하쿠는 보통 **복습 자료 PDF**를 함께 보낸다. 유튜브가 "Sign in to confirm you're not a bot"(로봇 확인)으로 막으면 **우회하지 않고**(다른 player client·쿠키 시도 금지) PDF를 보고 만든다. 이때는 영상 길이·구간 목차를 빼고, 영상 설명란에 '영상 순서'가 있으면 그것으로 목차를 만든다. PDF도 없으면 PDF나 대본을 달라고 한다.
 - 따라 할 질문은 PDF 문장 그대로 쓴다. PDF 내용을 보고 질문 형태로 바꿔 쓴 것은 보고할 때 하쿠에게 알린다.
-- 새 작업 창에는 도구가 없을 수 있다: `pip install python-pptx yt-dlp`, `apt-get install -y fonts-nanum && fc-cache -f` (LibreOffice는 기본 설치됨).
+- 새 작업 창에는 도구가 없을 수 있다: `pip install python-pptx yt-dlp`, `apt-get install -y fonts-nanum fonts-noto-cjk && fc-cache -f` (Noto CJK가 없으면 본문 글꼴이 바뀌어 예전 슬라이드와 달라짐) (LibreOffice는 기본 설치됨).
 
 ## 2. 과정·단계·번호 정하기
 - 제목, 설명, 썸네일 문구의 "입문 01" 같은 표기를 우선한다(썸네일: `https://i.ytimg.com/vi/<ID>/maxresdefault.jpg`를 받아서 직접 본다).
