@@ -1,7 +1,7 @@
 ---
 import Base from "../../../layouts/Base.astro";
 import VideoCard from "../../../components/VideoCard.astro";
-import { LEVELS, trackOf, levelName } from "../../../data/site.js";
+import { SITE, LEVELS, trackOf, levelName } from "../../../data/site.js";
 import { EPISODES, epsOf, epUrl, ytUrl, mmss, fmtDate, fileUrl, fileName, nextOf, prevOf, thumbOf } from "../../../data/episodes.js";
 
 export function getStaticPaths() {
@@ -14,6 +14,30 @@ const pub = epsOf(e.track).length;
 const next = nextOf(e);
 const prev = prevOf(e);
 const slug = `${e.track}-${e.level}-${e.no}`;
+// 검색엔진용 구조화 데이터: 이 페이지에 유튜브 영상이 있다는 것과 페이지 위치
+const isoDur = e.duration ? (() => { const [m, s] = e.duration.split(":").map(Number); return `PT${m}M${s}S`; })() : undefined;
+const pageUrl = `${SITE.url}${epUrl(e)}`;
+const ld = [
+  {
+    "@context": "https://schema.org", "@type": "VideoObject",
+    name: `${e.title} — ${t.name} ${lvName} ${e.no}`,
+    description: e.summary || e.oneLine,
+    thumbnailUrl: [thumbOf(e), `https://i.ytimg.com/vi/${e.video}/hqdefault.jpg`],
+    uploadDate: `${e.date}T00:00:00+09:00`,
+    ...(isoDur ? { duration: isoDur } : {}),
+    embedUrl: `https://www.youtube.com/embed/${e.video}`,
+    url: pageUrl, inLanguage: "ko-KR",
+    publisher: { "@type": "Organization", name: SITE.name, url: `${SITE.url}/`, logo: { "@type": "ImageObject", url: `${SITE.url}/icons/logo-136.png` } },
+  },
+  {
+    "@context": "https://schema.org", "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "홈", item: `${SITE.url}/` },
+      { "@type": "ListItem", position: 2, name: `${t.name} ${lvName}`, item: `${SITE.url}/${e.track}/${e.level}/` },
+      { "@type": "ListItem", position: 3, name: `${e.no} ${e.title}`, item: pageUrl },
+    ],
+  },
+];
 const files = [
   { ext: "pptx", name: "강의 슬라이드 (PowerPoint)", note: "수업이나 발표에 바로 쓸 수 있어요" },
   { ext: "pdf", name: "강의 슬라이드 (PDF)", note: "휴대폰에서 보기 좋아요" },
@@ -21,7 +45,10 @@ const files = [
 const ytIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>';
 const dlIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>';
 ---
-<Base title={`${t.name} ${lvName} ${e.no} · ${e.title}`} description={e.oneLine} nav="course" image={thumbOf(e)}>
+<Base
+  docTitle={`${e.title} — ${t.name}(챗GPT) ${lvName} ${e.no} | ${SITE.name}`}
+  description={`${e.oneLine} 챗GPT ${lvName} ${e.no}편 무료 강의 — 영상, 따라 할 질문, 강의 슬라이드(PPTX·PDF).`}
+  nav="course" image={thumbOf(e)} ogType="video.other" jsonld={ld}>
   <main>
     <div class="wrap gut lesson" data-lesson={slug}>
       <aside class="l-nav">

@@ -1,10 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
 import LevelCard from "./LevelCard.astro";
-import { LEVELS, trackOf } from "../data/site.js";
+import { SITE, LEVELS, trackOf } from "../data/site.js";
 import { epsOf, epUrl, thumbOf, fmtDate } from "../data/episodes.js";
 
-const { track, level } = Astro.props;
+const { track, level, canonicalPath } = Astro.props;
 const t = trackOf(track);
 const lv = LEVELS.find((l) => l.id === level);
 const info = t.levels[level];
@@ -13,7 +13,10 @@ const prologue = eps.find((e) => e.no === "00");
 const rest = eps.filter((e) => e.no !== "00");
 const last = eps.at(-1);
 ---
-<Base title={`${t.name} ${lv.name}`} description={`${t.name} ${lv.name}: ${info.goal}. ${info.topics}.`} nav="course">
+<Base
+  docTitle={`${t.name}(챗GPT) ${lv.name} 강의 — ${info.goal}${eps.length ? ` · 공개 ${eps.length}편` : ""} | ${SITE.name}`}
+  description={`${t.name}(챗GPT) ${lv.name} 무료 강의${eps.length ? `, 공개 ${eps.length}편` : ""}. ${info.goal}. ${info.topics}. 영상, 따라 할 질문, 강의 슬라이드(PPTX·PDF)를 함께 제공해요.`}
+  nav="course" canonicalPath={canonicalPath} noindex={!eps.length}>
   <div class="band accent">
     <div class="wrap gut page-hero">
       <div class="crumb"><a href="/">홈</a><span>›</span><span>과정</span></div>

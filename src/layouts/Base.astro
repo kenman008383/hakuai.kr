@@ -3,9 +3,12 @@ import "../styles/global.css";
 import { SITE, LEVELS, TRACKS } from "../data/site.js";
 import { epsOf } from "../data/episodes.js";
 
-const { title, description = SITE.description, nav = "", image } = Astro.props;
-const fullTitle = title ? `${title} | ${SITE.name}` : SITE.name;
-const canonical = new URL(Astro.url.pathname, SITE.url).href;
+// docTitle: <title>을 통째로 정할 때 / canonicalPath: 같은 내용을 가진 다른 주소를 대표 주소로 알릴 때
+// noindex: 검색 결과에 넣지 않을 페이지 / jsonld: 검색엔진용 구조화 데이터(객체 또는 배열)
+const { title, docTitle, description = SITE.description, nav = "", image, canonicalPath, noindex = false, jsonld, ogType = "website" } = Astro.props;
+const fullTitle = docTitle ?? (title ? `${title} | ${SITE.name}` : `${SITE.name} — 초보자를 위한 ChatGPT(챗GPT) 무료 강의`);
+const canonical = new URL(canonicalPath ?? Astro.url.pathname, SITE.url).href;
+const ld = jsonld ? (Array.isArray(jsonld) ? jsonld : [jsonld]) : [];
 const ogImage = image ?? `${SITE.url}/og.png`;
 const gpt = TRACKS[0];
 const countOf = (lv) => epsOf(gpt.id, lv).length;
@@ -18,7 +21,10 @@ const countOf = (lv) => epsOf(gpt.id, lv).length;
   <title>{fullTitle}</title>
   <meta name="description" content={description}>
   <link rel="canonical" href={canonical}>
-  <meta property="og:type" content="website">
+  {noindex && <meta name="robots" content="noindex, follow">}
+  <link rel="alternate" type="application/rss+xml" title={`${SITE.name} 새 강의`} href="/rss.xml">
+  <meta property="og:type" content={ogType}>
+  <meta property="og:locale" content="ko_KR">
   <meta property="og:site_name" content={SITE.name}>
   <meta property="og:title" content={fullTitle}>
   <meta property="og:description" content={description}>
@@ -35,6 +41,7 @@ const countOf = (lv) => epsOf(gpt.id, lv).length;
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700;800;900&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+  {ld.map((x) => <script type="application/ld+json" set:html={JSON.stringify(x).replaceAll("<", "\\u003c")} />)}
 </head>
 <body>
   <a class="skip" href="#main">본문으로 바로가기</a>

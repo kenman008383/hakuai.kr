@@ -9,7 +9,7 @@ const index = EPISODES.map((e) => ({
   text: [e.title, e.tag, e.oneLine, e.summary, ...(e.timeline ?? []).map((t) => `${t[1]} ${t[2]}`), ...(e.prompts ?? []).map((p) => p.label)].join(" "),
 }));
 ---
-<Base title="강의 검색">
+<Base title="강의 검색" noindex>
   <div class="band">
     <div class="wrap gut page-hero search-page">
       <div class="crumb"><a href="/">홈</a><span>›</span><span>강의 검색</span></div>

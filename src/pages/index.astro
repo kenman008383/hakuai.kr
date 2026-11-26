@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import VideoCard from "../components/VideoCard.astro";
 import LevelCard from "../components/LevelCard.astro";
-import { LEVELS, levelName, trackOf } from "../data/site.js";
+import { SITE, LEVELS, levelName, trackOf } from "../data/site.js";
 import { EPISODES, latestEpisode, epUrl, fmtDate, epsOf, thumbOf, ytUrl } from "../data/episodes.js";
 import { QNA } from "../data/qna.js";
 
@@ -12,8 +12,19 @@ const recentEps = [...EPISODES].sort((a, b) => b.date.localeCompare(a.date) || b
 const recentQna = QNA.slice(0, 3);
 const introEps = epsOf("chatgpt", "intro");
 const introNext = introEps.at(-1)?.next;
+const ld = [
+  {
+    "@context": "https://schema.org", "@type": "WebSite", name: SITE.name, alternateName: ["하쿠 AI", "hakuai"],
+    url: `${SITE.url}/`, inLanguage: "ko-KR", description: SITE.description,
+    potentialAction: { "@type": "SearchAction", target: `${SITE.url}/search/?q={search_term_string}`, "query-input": "required name=search_term_string" },
+  },
+  {
+    "@context": "https://schema.org", "@type": "Organization", name: SITE.name, url: `${SITE.url}/`,
+    logo: `${SITE.url}/icons/logo-136.png`, sameAs: [SITE.channel], email: SITE.email,
+  },
+];
 ---
-<Base nav="home">
+<Base nav="home" jsonld={ld}>
   <div class="band">
     <div class="wrap gut hero">
       <div>
