@@ -9,7 +9,7 @@ export function GET() {
     // /chatgpt/는 입문 목록과 같은 내용이라 대표 주소(/chatgpt/intro/)만 넣고, 아직 강의가 없는 단계는 뺀다
     ...TRACKS.flatMap((t) => LEVELS.filter((l) => epsOf(t.id, l.id).length).map((l) => ({ path: `/${t.id}/${l.id}/`, lastmod: latest }))),
     ...EPISODES.map((e) => ({ path: epUrl(e), lastmod: e.date })),
-    { path: "/qna/" }, { path: "/resources/", lastmod: latest }, { path: "/about/" },
+    { path: "/qna/" }, { path: "/resources/", lastmod: latest }, { path: "/about/" }, { path: "/privacy/" },
   ];
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

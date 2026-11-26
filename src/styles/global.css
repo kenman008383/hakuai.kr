@@ -106,6 +106,10 @@ button { font: inherit; color: inherit; }
 .crumb { font-size: 14px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
 .crumb a { color: var(--muted); }
 .band.accent { background: linear-gradient(90deg, var(--bg) 0%, var(--band) 55%, var(--accent-soft) 100%); }
+.free-note { margin-top: 18px; padding: 14px 16px; max-width: 34em; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--yellow); border-radius: 10px; font-size: 16px; line-height: 1.6; }
+.free-note p { margin: 0; color: var(--muted); }
+.free-note p + p { margin-top: 4px; }
+.free-note b { color: var(--ink); font-size: 17px; }
 .hero-meta { margin-top: 12px; color: var(--muted); font-size: 15px; }
 
 /* Video card */
