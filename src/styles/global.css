@@ -109,6 +109,7 @@ button { font: inherit; color: inherit; }
 .free-note { margin-top: 18px; padding: 14px 16px; max-width: 34em; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--yellow); border-radius: 10px; font-size: 16px; line-height: 1.6; }
 .free-note p { margin: 0; color: var(--muted); }
 .free-note p + p { margin-top: 4px; }
+.use-note { margin: 0 0 18px; max-width: none; }
 .free-note b { color: var(--ink); font-size: 17px; }
 .hero-meta { margin-top: 12px; color: var(--muted); font-size: 15px; }
 

@@ -15,6 +15,10 @@ const rows = [...EPISODES].sort((a, b) => b.date.localeCompare(a.date) || b.no.l
   <main>
     <section>
       <div class="wrap gut">
+        <div class="free-note use-note">
+          <p><b>공공기관·학교·도서관 배포 안내</b></p>
+          <p>공공기관·학교·도서관은 비영리 교육 목적으로 본 자료를 무료로 내려받아 수강자에게 배포할 수 있습니다. 출처와 hakuai.kr 주소를 표시해 주세요. 내용 수정 및 유료 판매는 별도 허락이 필요합니다.</p>
+        </div>
         <div class="filters" role="group" aria-label="단계별 보기">
           <button type="button" data-filter="all" aria-pressed="true">전체</button>
           {LEVELS.map((l) => <button type="button" data-filter={l.id} aria-pressed="false">{l.name}</button>)}
